@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spent — a thousand words, once each</title>
+<meta name="description" content="You wake with 1,000 words left, ever. Every word you spend on someone is gone for good. What do you save love for?">
+<meta property="og:title" content="Spent — a thousand words, once each">
+<meta property="og:description" content="Every distinct word you type is burned forever. A daily scene needs the right ones. What do you save love for?">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%95%AF%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --umber-0:#1c130d;
+    --umber-1:#241a12;
+    --umber-2:#3a2a1c;
+    --umber-3:#4d3826;
+    --ivory:#f4ead9;
+    --ivory-dim:#c9baa4;
+    --flame:#e8a54b;
+    --flame-dim:#a9723a;
+    --ember:#c9704a;
+    --line: rgba(244,234,217,0.14);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:radial-gradient(ellipse at 50% -10%, var(--umber-2), var(--umber-0) 70%);
+    color:var(--ivory);
+    font-family:Georgia,'Iowan Old Style','Palatino Linotype',serif;
+    min-height:100dvh;
+    display:flex;
+    justify-content:center;
+  }
+  .app{
+    width:100%;
+    max-width:480px;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    padding:calc(env(safe-area-inset-top) + 20px) calc(env(safe-area-inset-right) + 20px) calc(env(safe-area-inset-bottom) + 20px) calc(env(safe-area-inset-left) + 20px);
+  }
+  .screen{display:none;flex-direction:column;flex:1;gap:16px;animation:flicker .6s ease-out;}
+  .screen.active{display:flex;}
+  @keyframes flicker{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+  .brand{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:6px;}
+  .brand .wick{font-size:28px;filter:drop-shadow(0 0 8px rgba(232,165,75,0.6));}
+  .brand h1{font-size:22px;letter-spacing:0.14em;text-transform:uppercase;font-weight:400;margin:0;color:var(--flame);}
+
+  .tagline{text-align:center;color:var(--ivory-dim);font-size:15px;line-height:1.5;margin:0 0 8px;}
+
+  .card{
+    background:linear-gradient(180deg, rgba(244,234,217,0.05), rgba(244,234,217,0.02));
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:20px;
+  }
+
+  .budget-ring{
+    text-align:center;
+    margin:8px 0 4px;
+  }
+  .budget-ring .n{font-size:44px;color:var(--flame);line-height:1;}
+  .budget-ring .l{font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ivory-dim);}
+
+  button{
+    font-family:inherit;
+    font-size:16px;
+    border:1px solid var(--flame-dim);
+    background:linear-gradient(180deg, rgba(232,165,75,0.16), rgba(232,165,75,0.06));
+    color:var(--ivory);
+    padding:13px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    width:100%;
+  }
+  button:active{transform:translateY(1px);}
+  button.primary{background:linear-gradient(180deg, var(--flame), var(--ember));color:#241608;border:none;font-weight:600;}
+  button.ghost{background:transparent;border:1px solid var(--line);color:var(--ivory-dim);}
+  button:disabled{opacity:0.45;cursor:default;}
+
+  .row{display:flex;gap:10px;}
+  .row button{flex:1;}
+
+  .scene-title{font-size:20px;color:var(--flame);margin:0;}
+  .scene-recipient{font-size:13px;color:var(--ivory-dim);text-transform:uppercase;letter-spacing:0.08em;margin:0;}
+  .scene-prompt{font-size:16px;line-height:1.6;margin:0;}
+
+  textarea{
+    width:100%;
+    min-height:96px;
+    resize:vertical;
+    background:var(--umber-1);
+    border:1px solid var(--line);
+    border-radius:10px;
+    color:var(--ivory);
+    font-family:inherit;
+    font-size:16px;
+    padding:12px;
+  }
+  textarea:focus{outline:1px solid var(--flame-dim);}
+
+  .feedback{font-size:14px;line-height:1.5;color:var(--ivory-dim);min-height:1em;}
+  .feedback.warm{color:var(--flame);}
+
+  .spent-words{display:flex;flex-wrap:wrap;gap:6px;}
+  .spent-words span{
+    font-size:13px;
+    padding:3px 9px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    color:var(--ivory-dim);
+  }
+
+  .history-item{
+    border-bottom:1px solid var(--line);
+    padding:10px 0;
+    font-size:14px;
+  }
+  .history-item:last-child{border-bottom:none;}
+  .history-item .h-recipient{color:var(--flame);}
+  .history-item .h-words{color:var(--ivory-dim);}
+
+  .howto-text{font-size:15px;line-height:1.7;color:var(--ivory-dim);}
+  .howto-text strong{color:var(--ivory);}
+
+  footer.nav{display:flex;gap:10px;margin-top:auto;padding-top:14px;}
+  footer.nav button{font-size:14px;padding:10px;}
+
+  .final-glow{
+    text-align:center;
+    padding:40px 10px;
+  }
+  .final-glow .wick{font-size:48px;display:block;margin-bottom:18px;filter:drop-shadow(0 0 16px rgba(232,165,75,0.55));}
+  .final-glow p{color:var(--ivory-dim);line-height:1.7;font-size:16px;}
+
+  a.link{color:var(--flame);text-decoration:underline;cursor:pointer;background:none;border:none;font:inherit;padding:0;}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <section class="screen active" id="screen-title">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px;">
+      <div class="brand"><span class="wick">🕯️</span><h1>Spent</h1></div>
+      <p class="tagline">You woke up with one thousand words left, for the rest of your life. Every one you spend is gone the moment you use it.</p>
+      <div class="card budget-ring">
+        <div class="n" id="title-remaining">1000</div>
+        <div class="l">words remaining</div>
+      </div>
+      <button class="primary" id="btn-start">Begin</button>
+      <button class="ghost" id="btn-howto">How this works</button>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-howto">
+    <div class="brand"><span class="wick">🕯️</span><h1>How This Works</h1></div>
+    <div class="card howto-text">
+      <p>Each scene needs you to say something real — <strong>comfort a friend, give a stranger directions, describe a sunset to someone who can't see it.</strong></p>
+      <p>Type freely. Small joining words (a, the, and, to…) are always free. Everything else you type — every distinct word — is <strong>spent</strong> the moment you send it, and it never comes back. Typos are forgiven; the meaning is what matters.</p>
+      <p>Your keyboard remembers what you've already spent. It will not offer those words to you again — not tomorrow, not ever.</p>
+      <p>When the thousand run out, there is one last scene. It asks for nothing.</p>
+    </div>
+    <button id="btn-howto-back">Back</button>
+  </section>
+
+  <section class="screen" id="screen-play">
+    <div class="row" style="margin-bottom:-4px;">
+      <div class="card" style="flex:1;text-align:center;padding:10px;">
+        <div style="font-size:22px;color:var(--flame);" id="play-remaining">1000</div>
+        <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ivory-dim);">words left</div>
+      </div>
+      <div class="card" style="flex:1;text-align:center;padding:10px;">
+        <div style="font-size:22px;color:var(--flame);" id="play-day">1</div>
+        <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ivory-dim);">day</div>
+      </div>
+    </div>
+
+    <div class="card" id="scene-card">
+      <p class="scene-recipient" id="scene-recipient">for your friend</p>
+      <h2 class="scene-title" id="scene-title">The Kitchen Table</h2>
+      <p class="scene-prompt" id="scene-prompt">…</p>
+    </div>
+
+    <div id="compose-area">
+      <textarea id="input-text" placeholder="Say it in your own words…" maxlength="240"></textarea>
+      <p class="feedback" id="feedback"></p>
+      <button class="primary" id="btn-submit">Send it</button>
+    </div>
+
+    <div id="resolve-area" style="display:none;">
+      <div class="card">
+        <p class="feedback warm" id="resolve-message"></p>
+        <p class="scene-recipient" style="margin-top:14px;">words spent this scene</p>
+        <div class="spent-words" id="resolve-words"></div>
+      </div>
+      <div class="row" style="margin-top:12px;">
+        <button class="primary" id="btn-next">Next scene</button>
+        <button class="ghost" id="btn-to-ledger">Ledger</button>
+      </div>
+    </div>
+
+    <footer class="nav">
+      <button class="ghost" id="btn-play-ledger">Ledger</button>
+      <button class="ghost" id="btn-play-title">Title</button>
+    </footer>
+  </section>
+
+  <section class="screen" id="screen-ledger">
+    <div class="brand"><span class="wick">🕯️</span><h1>Your Ledger</h1></div>
+    <div class="card budget-ring">
+      <div class="n" id="ledger-remaining">1000</div>
+      <div class="l">of 1000 words remaining</div>
+    </div>
+    <div class="card" style="max-height:40vh;overflow-y:auto;">
+      <div id="ledger-history"></div>
+      <p class="feedback" id="ledger-empty">Nothing spent yet.</p>
+    </div>
+    <button id="btn-share">Copy today's line</button>
+    <p class="feedback" id="share-feedback"></p>
+    <footer class="nav">
+      <button class="ghost" id="btn-ledger-play">Back to scene</button>
+      <button class="ghost" id="btn-ledger-title">Title</button>
+    </footer>
+  </section>
+
+  <section class="screen" id="screen-final">
+    <div class="final-glow">
+      <span class="wick">🕯️</span>
+      <h2 class="scene-title" id="final-title">The Last Word Spent</h2>
+      <p id="final-prompt">There is nothing left to spend. Sit with the one beside you and say nothing at all.</p>
+    </div>
+    <button id="btn-final-ledger">See what you spent, and on whom</button>
+  </section>
+
+</div>
+<script type="module" src="game.js"></script>
+</body>
+</html>
